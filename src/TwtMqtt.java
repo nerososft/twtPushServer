@@ -12,11 +12,21 @@ public class TwtMqtt {
     private String msg;
     private Integer qos;
     private String clientId;
+    private String content;
     private boolean isConnected = false;
 
     private MemoryPersistence persistence;//
     private MqttClient mqttClient;
     private MqttConnectOptions mqttConnectOptions;
+    private MqttMessage message;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getBroker() {
         return broker;
@@ -89,6 +99,7 @@ public class TwtMqtt {
         mqttConnectOptions.setKeepAliveInterval(18330);
         mqttConnectOptions.setUserName(userName);
         mqttConnectOptions.setPassword(password.toCharArray());
+        message = new MqttMessage(content.getBytes());
         try {
             mqttClient = new MqttClient(broker, clientId, persistence);
             mqttClient.setCallback(new MqttCallback() {
@@ -136,6 +147,18 @@ public class TwtMqtt {
             System.out.println("excep " + me);
             me.printStackTrace();
         }
-
+    }
+    void send(){
+        message.setQos(qos);
+        try {
+            mqttClient.publish(topic, message);
+        } catch (MqttException me) {
+            System.out.println("reason " + me.getReasonCode());
+            System.out.println("msg " + me.getMessage());
+            System.out.println("loc " + me.getLocalizedMessage());
+            System.out.println("cause " + me.getCause());
+            System.out.println("excep " + me);
+            me.printStackTrace();
+        }
     }
 }
