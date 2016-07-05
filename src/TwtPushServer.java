@@ -9,7 +9,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
  */
 public class TwtPushServer {
     public static void main(String[] args) {
-
         TwtMqtt mqtt = new TwtMqtt();
         mqtt.setBroker("tcp://121.42.157.180:61613");
         mqtt.setTopic("twtandroid1");
